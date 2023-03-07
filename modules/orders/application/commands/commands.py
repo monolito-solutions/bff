@@ -3,7 +3,7 @@ from utils import time_millis
 import uuid
 
 
-class CheckInventoryPayload(Record):
+class OrderPayload(Record):
     order_id = String()
     customer_id = String()
     order_date = String()
@@ -13,15 +13,20 @@ class CheckInventoryPayload(Record):
     order_version = Long()
 
 
-class CommandCheckInventoryOrder(Record):
+class CommandCreateOrder(Record):
     id = String(default=str(uuid.uuid4()))
     time = Long()
     ingestion = Long(default=time_millis())
     specversion = String(default="v2")
-    type = String(default="CommandCheckInventory")
+    type = String(default="CommandCreateOrder")
     datacontenttype = String()
-    service_name = String(default="inbound.entregasalpes")
-    data_payload = CheckInventoryPayload
+    service_name = String(default="bff.entregasalpes")
+    data_payload = OrderPayload
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+class CommandGetOrder(CommandCreateOrder):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.type = "CommandGetOrder"

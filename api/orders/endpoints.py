@@ -1,31 +1,21 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from upscaler.orders.versioning import detect_order_version
-from sqlalchemy.exc import IntegrityError
-from api.errors.exceptions import BaseAPIException
-from modules.orders.application.events.events import EventOrderCreated, OrderCreatedPayload, ProductPayload
-from modules.orders.application.commands.commands import CommandCheckInventoryOrder, CheckInventoryPayload
-from modules.orders.infrastructure.repositories import OrdersRepositorySQLAlchemy
+from modules.orders.application.commands.commands import CommandCreateOrder, OrderPayload, CommandGetOrder
+from modules.orders.infrastructure.queue import get_order_queue
 from infrastructure.dispatchers import Dispatcher
-from config.db import get_db
 import utils
 import json
+import uuid
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
+order_queue = get_order_queue()
 
 @router.post("/", status_code=202)
-def create_order(order:dict, db=Depends(get_db)):
+def create_order(order:dict):
     order = detect_order_version(order)
 
-    try:
-        repository = OrdersRepositorySQLAlchemy(db)
-        repository.create(order)
-    except IntegrityError:
-        raise BaseAPIException(f"Error creating order, primary key integrity violated (Duplicate ID)", 400)
-    except Exception as e:
-        raise BaseAPIException(f"Error creating order: {e}", 500)
-
-    event_payload = OrderCreatedPayload(
+    command_payload = OrderPayload(
         order_id = str(order.order_id),
         customer_id = str(order.customer_id),
         order_date = str(order.order_date),
@@ -35,26 +25,47 @@ def create_order(order:dict, db=Depends(get_db)):
         order_version = int(order.order_version)
     )
 
-    event = EventOrderCreated(
+    command = CommandCreateOrder(
         time = utils.time_millis(),
         ingestion = utils.time_millis(),
-        datacontenttype = OrderCreatedPayload.__name__,
-        data_payload = event_payload
-    )
-
-    command_payload = CheckInventoryPayload(**event_payload.to_dict())
-    command_payload.order_status = "Ready to check inventory"
-
-    command = CommandCheckInventoryOrder(
-        time = utils.time_millis(),
-        ingestion = utils.time_millis(),
-        datacontenttype = CheckInventoryPayload.__name__,
+        datacontenttype = OrderPayload.__name__,
         data_payload = command_payload
     )
 
     dispatcher = Dispatcher()
-    dispatcher.publish_message(event, "order-events")
     dispatcher.publish_message(command, "order-commands")
 
+    return {"message": "Order create accepted"}
 
-    return {"message": "Order created successfully"}
+@router.get("/")
+def get_order(order_id: uuid.UUID):
+    try:
+        order = order_queue.get_order(order_id)
+    except KeyError:
+        command_payload = OrderPayload(
+            order_id = str(order_id),
+            customer_id = "",
+            order_date = "",
+            order_status = "",
+            order_items = "",
+            order_total = "",
+            order_version = 2
+        )
+
+        command = CommandGetOrder(
+            time = utils.time_millis(),
+            ingestion = utils.time_millis(),
+            datacontenttype = OrderPayload.__name__,
+            data_payload = command_payload,
+        )
+
+        order_queue.insert(order_id, dict())
+
+        dispatcher = Dispatcher()
+        dispatcher.publish_message(command, "order-commands")
+        return {"message": "Order get accepted, please refresh and wait for the response"}
+
+    if order != dict():
+        return {"message": order}
+    else:
+        return {"message": "Order not yet retreived, please refresh and wait for the response"}

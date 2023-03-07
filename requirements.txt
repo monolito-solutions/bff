@@ -5,5 +5,3 @@ fastapi
 uvicorn
 pulsar-client
 pulsar-client[avro]
-sqlalchemy
-pymysql

@@ -1,5 +1,6 @@
 import logging
 import traceback
+from modules.orders.infrastructure.queue import get_order_queue
 import pulsar
 import _pulsar
 import aiopulsar
@@ -7,6 +8,7 @@ import asyncio
 from pulsar.schema import *
 from utils import broker_host
 
+order_queue = get_order_queue()
 
 async def subscribe_to_topic(topic: str, subscription: str, schema: Record, consumer_type: _pulsar.ConsumerType = _pulsar.ConsumerType.Shared):
     try:
@@ -20,8 +22,10 @@ async def subscribe_to_topic(topic: str, subscription: str, schema: Record, cons
                 while True:
                     mensaje = await consumer.receive()
                     datos = mensaje.value()
-                    print(f'\nEvent recibido: {datos}')
-                    print(f"\nEvent data: {datos.data_payload}")
+                    print(f'\nEvent recibido: {datos.type}')
+                    if datos.type == "BffEventGetOrder":
+                        print(f"\nBffEvent data: {datos.data_payload}")
+                        order_queue.insert(datos.data_payload.order_id, datos.data_payload)
                     await consumer.acknowledge(mensaje)
 
     except:

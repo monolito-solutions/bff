@@ -4,12 +4,10 @@ import asyncio
 from infrastructure.consumers import subscribe_to_topic
 from modules.orders.application.commands.commands import CommandCreateOrder
 from modules.orders.application.events.events import BffEvent
-from modules.orders.infrastructure.queue import init_order_queue
 from api.orders.endpoints import router as api_router
 
 app = FastAPI()
 app.include_router(api_router)
-init_order_queue()
 
 tasks = list()
 

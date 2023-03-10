@@ -1,13 +1,14 @@
 from fastapi import APIRouter
 from upscaler.orders.versioning import detect_order_version
 from modules.orders.application.commands.commands import CommandCreateOrder, OrderPayload, CommandGetOrder
-from modules.orders.infrastructure.queue import get_order_queue
+from modules.orders.infrastructure.queue import get_order_queue, init_order_queue
 from infrastructure.dispatchers import Dispatcher
 import utils
 import json
 import uuid
 
 router = APIRouter(prefix="/orders", tags=["orders"])
+init_order_queue()
 
 order_queue = get_order_queue()
 
@@ -48,7 +49,7 @@ def get_order(order_id: uuid.UUID):
             order_date = "",
             order_status = "",
             order_items = "",
-            order_total = "",
+            order_total = 0.0,
             order_version = 2
         )
 

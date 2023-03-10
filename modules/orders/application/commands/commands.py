@@ -29,4 +29,6 @@ class CommandCreateOrder(Record):
 class CommandGetOrder(CommandCreateOrder):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def __post_init__(self):
         self.type = "CommandGetOrder"

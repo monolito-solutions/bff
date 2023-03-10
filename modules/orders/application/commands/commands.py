@@ -26,9 +26,15 @@ class CommandCreateOrder(Record):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-class CommandGetOrder(CommandCreateOrder):
+class CommandGetOrder(Record):
+    id = String(default=str(uuid.uuid4()))
+    time = Long()
+    ingestion = Long(default=time_millis())
+    specversion = String(default="v2")
+    type = String(default="CommandGetOrder")
+    datacontenttype = String()
+    service_name = String(default="bff.entregasalpes")
+    data_payload = OrderPayload
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-    def __post_init__(self):
-        self.type = "CommandGetOrder"

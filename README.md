@@ -1,6 +1,6 @@
-# Inbound - Monolito Solutions
+# BFF - Monolito Solutions
 
-Este es el repositorio del microservicio Inbound del proyecto "Entregas de los Alpes", el cual se encarga de recibir los pedidos del cliente. Este microservicio fue construido utilizando el framework FastAPI.
+Este es el repositorio del microservicio BDD del proyecto "Entregas de los Alpes", el cual se encarga de recibir los pedidos del cliente. Este microservicio fue construido utilizando el framework FastAPI.
 
 ## Requerimientos
 
@@ -17,9 +17,8 @@ pip install -r requirements.txt
 
 ## Configuración
 
-Antes de correr el microservicio Inbound, es necesario configurar las direcciones del host de Apache Pulsar y la base de datos MySQL.
+Antes de correr el microservicio Inbound, es necesario configurar las direcciones del host de Apache Pulsar.
 - La configuración de Apache Pulsar se encuentra en ```./utils.py```
-- La configuración de la base de datos MySQL se encuentra en ```./config/db.py```
 
 ## Correr el microservicio
 

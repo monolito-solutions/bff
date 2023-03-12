@@ -50,7 +50,7 @@ def get_order(order_id: uuid.UUID):
             payload = ""
         )
 
-        order_queue.insert(order_id, dict())
+        order_queue.insert(str(order_id), dict())
         dispatcher = Dispatcher()
         dispatcher.publish_message(query, "order-queries")
         return {"message": "Order get accepted, please refresh and wait for the response"}

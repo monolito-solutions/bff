@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from upscaler.orders.versioning import detect_order_version
-from modules.orders.application.commands.commands import CommandCreateOrder, OrderPayload, CommandGetOrder
+from modules.orders.application.commands.commands import CommandCreateOrder, OrderPayload
+from modules.orders.application.events.events import QueryMessage
 from modules.orders.infrastructure.queue import get_order_queue, init_order_queue
 from infrastructure.dispatchers import Dispatcher
 import utils
@@ -43,27 +44,15 @@ def get_order(order_id: uuid.UUID):
     try:
         order = order_queue.get_order(order_id)
     except KeyError:
-        command_payload = OrderPayload(
+        query = QueryMessage(
             order_id = str(order_id),
-            customer_id = "",
-            order_date = "",
-            order_status = "",
-            order_items = "",
-            order_total = 0.0,
-            order_version = 2
-        )
-
-        command = CommandGetOrder(
-            time = utils.time_millis(),
-            ingestion = utils.time_millis(),
-            datacontenttype = OrderPayload.__name__,
-            data_payload = command_payload,
+            type = "CommandGetOrder",
+            payload = ""
         )
 
         order_queue.insert(order_id, dict())
-        print(command_payload)
         dispatcher = Dispatcher()
-        dispatcher.publish_message(command, "order-queries")
+        dispatcher.publish_message(query, "order-queries")
         return {"message": "Order get accepted, please refresh and wait for the response"}
 
     if order != dict():

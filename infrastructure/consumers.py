@@ -1,6 +1,6 @@
 import logging
 import traceback
-from modules.orders.infrastructure.queue import get_order_queue
+from modules.orders.infrastructure.queue import get_order_queue, init_order_queue
 import pulsar
 import _pulsar
 import aiopulsar
@@ -8,6 +8,7 @@ import asyncio
 from pulsar.schema import *
 from utils import broker_host
 
+init_order_queue()
 order_queue = get_order_queue()
 
 async def subscribe_to_topic(topic: str, subscription: str, schema: Record, consumer_type: _pulsar.ConsumerType = _pulsar.ConsumerType.Shared):

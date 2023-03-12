@@ -18,7 +18,8 @@ class OrderQueue:
 
 def init_order_queue():
     global order_queue
-    order_queue = OrderQueue()
+    if order_queue is None:
+        order_queue = OrderQueue()
 
 def get_order_queue():
     return order_queue

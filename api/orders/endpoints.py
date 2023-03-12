@@ -58,4 +58,6 @@ def get_order(order_id: uuid.UUID):
     if order != dict():
         return {"message": order}
     else:
+        print(order)
+        print(order_queue)
         return {"message": "Order not yet retreived, please refresh and wait for the response"}

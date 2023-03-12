@@ -13,7 +13,7 @@ init_order_queue()
 
 order_queue = get_order_queue()
 
-@router.post("/", status_code=202)
+@router.post("/", status_code=200)
 def create_order(order:dict):
     order = detect_order_version(order)
 

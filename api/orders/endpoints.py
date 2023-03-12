@@ -43,7 +43,7 @@ def create_order(order:dict):
 def get_order(order_id: uuid.UUID):
     try:
         print(order_queue)
-        order = order_queue.get_order(order_id)
+        order = order_queue.get_order(str(order_id))
     except KeyError:
         query = QueryMessage(
             order_id = str(order_id),

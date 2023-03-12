@@ -42,9 +42,8 @@ def create_order(order:dict):
 @router.get("/")
 def get_order(order_id: uuid.UUID):
     try:
-        order = order_queue.get_order(order_id)
-        print(order)
         print(order_queue)
+        order = order_queue.get_order(order_id)
     except KeyError:
         query = QueryMessage(
             order_id = str(order_id),

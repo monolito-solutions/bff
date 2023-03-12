@@ -37,7 +37,7 @@ def create_order(order:dict):
     dispatcher = Dispatcher()
     dispatcher.publish_message(command, "order-commands")
 
-    return {"message": "Order create accepted"}
+    return {"message": f"Order create accepted, your order id is: {order.order_id}"}
 
 @router.get("/")
 def get_order(order_id: uuid.UUID):

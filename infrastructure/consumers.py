@@ -23,9 +23,9 @@ async def subscribe_to_topic(topic: str, subscription: str, schema: Record, cons
                     mensaje = await consumer.receive()
                     datos = mensaje.value()
                     print(f'\nEvent recibido: {datos.type}')
-                    if datos.type == "BffEventGetOrder":
-                        print(f"\nBffEvent data: {datos.data_payload}")
-                        order_queue.insert(datos.data_payload.order_id, datos.data_payload)
+                    if datos.type == "GetOrderLogs":
+                        print(f"\nBffEvent data: {datos}")
+                        order_queue.insert(datos.order_id, datos.payload)
                     await consumer.acknowledge(mensaje)
 
     except:

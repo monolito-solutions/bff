@@ -3,6 +3,11 @@ from pulsar.schema import *
 from utils import time_millis
 import uuid
 
+class QueryMessage(Record):
+    order_id = String()
+    type = String(default="message")
+    payload = String()
+
 class BffEventPayload(Record):
     id = String(default=str(uuid.uuid4()))
     order_id = String()

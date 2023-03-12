@@ -3,7 +3,7 @@ import uvicorn
 import asyncio
 from infrastructure.consumers import subscribe_to_topic
 from modules.orders.application.commands.commands import CommandCreateOrder
-from modules.orders.application.events.events import BffEvent
+from modules.orders.application.events.events import BffEvent, QueryMessage
 from api.orders.endpoints import router as api_router
 
 app = FastAPI()
@@ -18,6 +18,8 @@ async def app_startup():
         "order-events", "sub-bff", BffEvent))
     task2 = asyncio.ensure_future(subscribe_to_topic(
         "order-commands", "sub-com-bff", CommandCreateOrder))
+    task3 = asyncio.ensure_future(subscribe_to_topic(
+        "order-queries", "sub-query-bff", QueryMessage))
     tasks.append(task1)
     tasks.append(task2)
 

@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "ea66641e-3128-4fb9-b945-5fe60b71b889",
+		"name": "EDA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17188527"
+	},
+	"item": [
+		{
+			"name": "Get Order Logs",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{IP_BFF}}/orders/?order_id={{(Reemplazar con UUID)}}",
+					"protocol": "http",
+					"host": [
+						"{{IP_BFF}}"
+					],
+					"path": [
+						"orders",
+						""
+					],
+					"query": [
+						{
+							"key": "order_id",
+							"value": "{{(Reemplazar con UUID)}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order V1",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"customer_id\": \"fdc2db56-1eb8-4f7e-90b2-bca6d44af667\",\r\n  \"order_items\": [\r\n    {\r\n      \"product_id\": \"9cad4dc7-50c0-44d7-9ed9-3f887a9d565b\",\r\n      \"supplier_id\": \"987eba3c-ae2b-4382-86f9-7ea238733e05\",\r\n      \"name\": \"product1\",\r\n      \"description\": \"Test Desc\",\r\n      \"price\": 33000.0,\r\n      \"quantity\": 5\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{IP_BFF}}/orders/",
+					"protocol": "http",
+					"host": [
+						"{{IP_BFF}}"
+					],
+					"path": [
+						"orders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order V2",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customer_id\": \"fdc2db56-1eb8-4f7e-90b2-bca6d44af667\",\r\n    \"order_date\": \"2023-02-27T08:05:08.464634\",\r\n    \"order_status\": \"Created\",\r\n    \"order_items\": [\r\n      {\r\n        \"product_id\": \"9cad4dc7-50c0-44d7-9ed9-3f887a9d565b\",\r\n        \"supplier_id\": \"987eba3c-ae2b-4382-86f9-7ea238733e05\",\r\n        \"name\": \"product1\",\r\n        \"description\": \"Test Desc\",\r\n        \"price\": 33000.0,\r\n        \"quantity\": 5\r\n      }\r\n    ],\r\n   \"order_total\": 33000\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{IP_BFF}}/orders/",
+					"protocol": "http",
+					"host": [
+						"{{IP_BFF}}"
+					],
+					"path": [
+						"orders",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

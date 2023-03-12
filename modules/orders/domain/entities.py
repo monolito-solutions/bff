@@ -9,6 +9,7 @@ class OrderV1:
     customer_id: uuid.uuid4()
     order_items: list
     order_version: int = 1
+    order_id: uuid.uuid4() = field(default_factory=lambda:uuid.uuid4())
 
     def upscale(self):
 
@@ -33,6 +34,7 @@ class OrderV2:
     order_items: List[Product]
     order_total: float
     order_version: int = 2
+    order_id: uuid.uuid4() = field(default_factory=lambda:uuid.uuid4())
 
     def to_dict(self):
         return {

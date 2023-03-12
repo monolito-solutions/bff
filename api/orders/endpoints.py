@@ -63,7 +63,7 @@ def get_order(order_id: uuid.UUID):
         order_queue.insert(order_id, dict())
         print(command_payload)
         dispatcher = Dispatcher()
-        dispatcher.publish_message(command, "order-commands")
+        dispatcher.publish_message(command, "order-queries")
         return {"message": "Order get accepted, please refresh and wait for the response"}
 
     if order != dict():

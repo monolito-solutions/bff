@@ -6,7 +6,6 @@ from datetime import datetime
 
 @dataclass(frozen=True)
 class OrderV1:
-    order_id: uuid.uuid4()
     customer_id: uuid.uuid4()
     order_items: list
     order_version: int = 1
@@ -18,7 +17,6 @@ class OrderV1:
             order_total += item["price"] * item["quantity"]
 
         return OrderV2(
-            order_id=self.order_id,
             customer_id=self.customer_id,
             order_date=datetime.now().isoformat(),
             order_status="Created",
@@ -29,7 +27,6 @@ class OrderV1:
 
 @dataclass(frozen=True)
 class OrderV2:
-    order_id: uuid.uuid4()
     customer_id: uuid.uuid4()
     order_date: str
     order_status: str
@@ -39,7 +36,6 @@ class OrderV2:
 
     def to_dict(self):
         return {
-            "order_id": self.order_id,
             "customer_id": self.customer_id,
             "order_date": self.order_date,
             "order_status": self.order_status,

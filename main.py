@@ -5,9 +5,21 @@ from infrastructure.consumers import subscribe_to_topic
 from modules.orders.application.commands.commands import CommandCreateOrder
 from modules.orders.application.events.events import BffEvent, QueryMessage
 from api.orders.endpoints import router as api_router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 app.include_router(api_router)
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 tasks = list()
 

@@ -43,6 +43,8 @@ def create_order(order:dict):
 def get_order(order_id: uuid.UUID):
     try:
         order = order_queue.get_order(order_id)
+        print(order)
+        print(order_queue)
     except KeyError:
         query = QueryMessage(
             order_id = str(order_id),
@@ -58,6 +60,4 @@ def get_order(order_id: uuid.UUID):
     if order != dict():
         return {"message": order}
     else:
-        print(order)
-        print(order_queue)
         return {"message": "Order not yet retreived, please refresh and wait for the response"}
